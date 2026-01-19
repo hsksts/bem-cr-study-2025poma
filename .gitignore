@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Generated data (large / reproducible)
+postproc_data/
+*.npz
+
+# Figures (optional: keep or ignore)
+# fig_*.png
+
