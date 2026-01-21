@@ -112,4 +112,3 @@ Both metrics are evaluated for:
 
 Satoshi Hoshika
 Graduate School of Design, Kyushu University
-(ASA\UTF{2013}ASJ Joint Meeting 2025, PoMA)
