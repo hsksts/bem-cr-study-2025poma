@@ -105,7 +105,6 @@ Evaluated on:
 
 - Reference implementation for PoMA validation
 - Small-to-medium mesh sizes assumed
-- No RKHS or kernel regression
 - Cr stored without quadrature weights
 
 ---
@@ -121,3 +120,14 @@ Results can be reproduced by running the scripts in the listed order.
 
 Academic and research use only.
 Please cite the associated PoMA paper when using this code.
+
+## Citation
+
+S. Hoshika et al.
+Directional Reflection Modeling via Wavenumber-Domain Reflection Coefficient for 3D Acoustic Field Simulation
+Proceedings of Meetings on Acoustics (PoMA), 2025.
+
+
+## Author
+Satoshi Hoshika
+Graduate School of Design, Kyushu University
