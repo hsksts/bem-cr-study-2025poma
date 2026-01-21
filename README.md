@@ -5,7 +5,7 @@ This repository contains the full numerical pipeline used in the PoMA paper pres
 ## Related Publications
 
 * **PoMA (Proceedings of Meetings on Acoustics)**
-  ASA\UTF{2013}ASJ Joint Meeting 2025, Honolulu
+  ASA-ASJ Joint Meeting 2025, Honolulu
   Official conference site: [https://acousticalsociety.org/honolulu-2025/](https://acousticalsociety.org/honolulu-2025/)
 
 * **arXiv preprint**
