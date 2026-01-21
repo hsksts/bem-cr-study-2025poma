@@ -1,133 +1,125 @@
-# Wavenumber-Domain Reflection Coefficient Estimation (PoMA Reference Code)
+# BEM Cr Study (PoMA 2025)
 
-This repository provides **research-oriented reference implementations**
-used for numerical validation in a PoMA paper on **wavenumber-domain acoustic
-reflection coefficient estimation** and its application to boundary element
-methods (BEM).
+This repository contains the **full numerical pipeline** used in the PoMA 2025 study
+on **wavenumber-domain reflection coefficients (Cr)** and their validation via BEM.
 
-The codes prioritize **clarity, reproducibility, and numerical transparency**
-over computational efficiency or large-scale applicability.
+The filenames below are **authoritative** and match the actual programs in this repository.
 
 ---
 
-## Scope and purpose
-
-This repository is intended to:
-
-- Demonstrate the full numerical workflow  
-  **(sound field generation → wavenumber-domain estimation → BEM reloading)**.
-- Provide reproducible reference results for **methodological comparison**.
-- Support **quantitative validation** against conventional admittance-based
-  boundary conditions.
-
-The implementations are **not optimized solvers** and should not be interpreted
-as production-ready BEM/FEM software.
-
----
-
-## Repository structure
+## Directory Structure
 
 ```
 .
+├── 0_generate_mesh.py
+├── 1_bem_export_space_fibonacci.py
+├── 1b_layout_plot_fibonacci.py
+├── 2_estimate_cr_from_space.py
+├── 2b_cr_confirmation.py
+├── 3_bem_forward_proposed.py
+├── 4_bem_forward_legacyY.py
+├── 5_postproc_view.py
+│
 ├── geometry/
-│   └── plane.step
+│   ├── flatplate.step
+│   └── slit.step
 │
 ├── mesh/
-│   └── generate_mesh.py
+│   ├── flatplate.step.msh
+│   └── slit.step.msh
 │
-├── bem/
-│   └── bem_export_space_fibonacci.py
-│
-├── estimation/
-│   └── estimate_cr_from_space.py
-│
-├── bem_reload/
-│   ├── bem_reload_standard_ft.py
-│   └── bem_legacyY_scalar.py
-│
-├── postproc/
-│   └── postproc_view.py
-│
+├── postproc_data/
+├── figs_cr_from_npz__PiPr_fixed01/
 └── README.md
 ```
 
 ---
 
-## Numerical workflow
+## Pipeline Overview (ASCII)
 
-### Step 1: Mesh generation
-```bash
-python mesh/generate_mesh.py
 ```
-
-### Step 2: BEM sound field generation (space domain)
-```bash
-python bem/bem_export_space_fibonacci.py
-```
-
-### Step 3: Wavenumber-domain reflection coefficient estimation
-```bash
-python estimation/estimate_cr_from_space.py
-```
-
-### Step 4: BEM reloading with estimated boundary operator
-
-**Standard FT-based boundary operator**
-```bash
-python bem_reload/bem_reload_standard_ft.py
-```
-
-**Conventional scalar admittance (baseline)**
-```bash
-python bem_reload/bem_legacyY_scalar.py
-```
-
-### Step 5: Post-processing and comparison
-```bash
-python postproc/postproc_view.py
+(0) Geometry & Mesh
+    └─ 0_generate_mesh.py
+         ↓
+(1) BEM field sampling (space snapshot)
+    └─ 1_bem_export_space_fibonacci.py
+         ↓
+    (layout check)
+    └─ 1b_layout_plot_fibonacci.py
+         ↓
+(2) Cr estimation (k-space)
+    └─ 2_estimate_cr_from_space.py
+         ↓
+    (diagnostics / confirmation)
+    └─ 2b_cr_confirmation.py
+         ↓
+(3) Forward BEM (proposed, k-space admittance)
+    └─ 3_bem_forward_proposed.py
+         ↓
+(4) Forward BEM (baseline, scalar Y)
+    └─ 4_bem_forward_legacyY.py
+         ↓
+(5) Visualization & quantitative comparison
+    └─ 5_postproc_view.py
 ```
 
 ---
 
-## Quantitative comparison metrics
+## Script Descriptions
 
-- Cosine similarity
-- Mean squared error (MSE)
+### 0_generate_mesh.py
+- Generates surface geometry and Gmsh meshes
+- Supports **flat plate** and **slit structure**
+- Outputs `.step` and `.msh`
 
-Evaluated on:
-- XZ cross-section
-- YZ cross-section
-- Combined XZ + YZ field
+### 1_bem_export_space_fibonacci.py
+- Boundary Element Method (BEM)
+- Samples sound field using **Fibonacci-distributed sources**
+- Exports spatial pressure snapshots (`.npz`)
+
+### 1b_layout_plot_fibonacci.py
+- Visual sanity check of source / receiver layout
+
+### 2_estimate_cr_from_space.py
+- Estimates **wavenumber-domain reflection coefficient Cr**
+- Uses spatial snapshots
+- Outputs `Cr_*.npz`
+
+### 2b_cr_confirmation.py
+- Visualizes Pi / Pr / Cr
+- Angle-dependent reflection diagnostics
+
+### 3_bem_forward_proposed.py
+- Forward BEM using **k-space admittance operator**
+- Loads estimated Cr directly
+- Produces validation sound fields
+
+### 4_bem_forward_legacyY.py
+- Baseline BEM with **scalar admittance Y**
+- Used as reference for comparison
+
+### 5_postproc_view.py
+- Pure post-processing & visualization
+- 2D sections (XZ / YZ)
+- 3D orthogonal cross-slices
+- Mesh + slice overlay
+- **Quantitative comparison**
+  - Cosine similarity
+  - MSE
+  - abs / complex-field options
 
 ---
 
-## Notes and limitations
+## Notes
 
-- Reference implementation for PoMA validation
-- Small-to-medium mesh sizes assumed
-- Cr stored without quadrature weights
-
----
-
-## Reproducibility
-
-All scripts are deterministic.
-Results can be reproduced by running the scripts in the listed order.
+- No acoustic computation is performed in `5_postproc_view.py`
+- Mesh units are assumed **mm → m** unless otherwise stated
+- Designed for **PoMA / JASA-level reproducibility**
+- Flat plate and slit cases are switchable via file paths
 
 ---
-
-## License
-
-Academic and research use only.
-Please cite the associated PoMA paper when using this code.
-
-## Citation
-
-S. Hoshika et al.
-Directional Reflection Modeling via Wavenumber-Domain Reflection Coefficient for 3D Acoustic Field Simulation
-Proceedings of Meetings on Acoustics (PoMA), 2025.
-
 
 ## Author
-Satoshi Hoshika
+
+Satoshi Hoshika  
 Graduate School of Design, Kyushu University
