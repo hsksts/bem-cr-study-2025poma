@@ -1,6 +1,6 @@
 # BEM Cr Study (PoMA 2025)
 
-This repository contains the full numerical pipeline used in the PoMA paper presented at the **ASA\UTF{2013}ASJ Joint Meeting 2025 (Honolulu)**.
+This repository contains the full numerical pipeline used in the PoMA paper presented at the **ASA-ASJ Joint Meeting 2025 (Honolulu)**.
 
 ## Related Publications
 
