@@ -1,13 +1,28 @@
 # BEM Cr Study (PoMA 2025)
 
-This repository contains the **full numerical pipeline** used in the PoMA 2025 study
-on **wavenumber-domain reflection coefficients (Cr)** and their validation via BEM.
+This repository contains the full numerical pipeline used in the PoMA paper presented at the **ASA\UTF{2013}ASJ Joint Meeting 2025 (Honolulu)**.
 
-The filenames below are **authoritative** and match the actual programs in this repository.
+## Related Publications
 
----
+* **PoMA (Proceedings of Meetings on Acoustics)**
+  ASA\UTF{2013}ASJ Joint Meeting 2025, Honolulu
+  Official conference site: [https://acousticalsociety.org/honolulu-2025/](https://acousticalsociety.org/honolulu-2025/)
 
-## Directory Structure
+* **arXiv preprint**
+  *Directional Reflection Modeling via Wavenumber-Domain Reflection Coefficient for 3D Acoustic Field Simulation*
+  [https://arxiv.org/abs/2601.07481](https://arxiv.org/abs/2601.07481)
+
+## Purpose
+
+The goal of this repository is to validate and demonstrate a **wavenumber-domain acoustic reflection coefficient (Cr)** approach for 3D sound field simulation using the Boundary Element Method (BEM).
+
+The method enables:
+
+* Direction-dependent reflection modeling
+* Nonlocal boundary operators derived from measured or simulated sound fields
+* Quantitative comparison with conventional (scalar-admittance) BEM models
+
+## Repository Structure
 
 ```
 .
@@ -19,107 +34,82 @@ The filenames below are **authoritative** and match the actual programs in this 
 ├── 3_bem_forward_proposed.py
 ├── 4_bem_forward_legacyY.py
 ├── 5_postproc_view.py
-│
 ├── geometry/
 │   ├── flatplate.step
 │   └── slit.step
-│
 ├── mesh/
 │   ├── flatplate.step.msh
 │   └── slit.step.msh
-│
 ├── postproc_data/
 ├── figs_cr_from_npz__PiPr_fixed01/
 └── README.md
 ```
 
----
-
-## Pipeline Overview (ASCII)
+## Pipeline Overview
 
 ```
-(0) Geometry & Mesh
-    └─ 0_generate_mesh.py
-         ↓
-(1) BEM field sampling (space snapshot)
-    └─ 1_bem_export_space_fibonacci.py
-         ↓
-    (layout check)
-    └─ 1b_layout_plot_fibonacci.py
-         ↓
-(2) Cr estimation (k-space)
-    └─ 2_estimate_cr_from_space.py
-         ↓
-    (diagnostics / confirmation)
-    └─ 2b_cr_confirmation.py
-         ↓
-(3) Forward BEM (proposed, k-space admittance)
-    └─ 3_bem_forward_proposed.py
-         ↓
-(4) Forward BEM (baseline, scalar Y)
-    └─ 4_bem_forward_legacyY.py
-         ↓
-(5) Visualization & quantitative comparison
-    └─ 5_postproc_view.py
+[ Geometry / Mesh ]
+        |
+        v
+(0) Mesh generation
+        |
+        v
+(1) BEM: space snapshot (Fibonacci sources)
+        |
+        v
+(2) Estimate Cr in wavenumber domain
+        |
+        v
+(3) Forward BEM with Cr-based admittance (proposed)
+        |
+        +--> (4) Forward BEM with scalar admittance (legacy)
+        |
+        v
+(5) Post-processing & comparison
+      - 2D sections (XZ / YZ)
+      - 3D cross-slices
+      - Mesh overlay
+      - Cosine similarity / MSE
 ```
 
----
+## Key Scripts
 
-## Script Descriptions
+* **3_bem_forward_proposed.py**
+  Forward BEM using nonlocal, k-space admittance derived from Cr.
 
-### 0_generate_mesh.py
-- Generates surface geometry and Gmsh meshes
-- Supports **flat plate** and **slit structure**
-- Outputs `.step` and `.msh`
+* **4_bem_forward_legacyY.py**
+  Baseline BEM using scalar (local) admittance Y.
 
-### 1_bem_export_space_fibonacci.py
-- Boundary Element Method (BEM)
-- Samples sound field using **Fibonacci-distributed sources**
-- Exports spatial pressure snapshots (`.npz`)
+* **5_postproc_view.py**
+  Visualization and quantitative comparison tool:
 
-### 1b_layout_plot_fibonacci.py
-- Visual sanity check of source / receiver layout
+  * 2D slices
+  * 3D orthogonal cross-slices
+  * Mesh overlay
+  * Cosine similarity & MSE (with / without absolute value)
 
-### 2_estimate_cr_from_space.py
-- Estimates **wavenumber-domain reflection coefficient Cr**
-- Uses spatial snapshots
-- Outputs `Cr_*.npz`
+## Metrics
 
-### 2b_cr_confirmation.py
-- Visualizes Pi / Pr / Cr
-- Angle-dependent reflection diagnostics
+* **Cosine similarity**
+  Evaluates shape similarity of sound fields
 
-### 3_bem_forward_proposed.py
-- Forward BEM using **k-space admittance operator**
-- Loads estimated Cr directly
-- Produces validation sound fields
+* **Mean Squared Error (MSE)**
+  Evaluates absolute magnitude difference
 
-### 4_bem_forward_legacyY.py
-- Baseline BEM with **scalar admittance Y**
-- Used as reference for comparison
+Both metrics are evaluated for:
 
-### 5_postproc_view.py
-- Pure post-processing & visualization
-- 2D sections (XZ / YZ)
-- 3D orthogonal cross-slices
-- Mesh + slice overlay
-- **Quantitative comparison**
-  - Cosine similarity
-  - MSE
-  - abs / complex-field options
-
----
+* XZ plane
+* YZ plane
+* Combined (XZ + YZ)
 
 ## Notes
 
-- No acoustic computation is performed in `5_postproc_view.py`
-- Mesh units are assumed **mm → m** unless otherwise stated
-- Designed for **PoMA / JASA-level reproducibility**
-- Flat plate and slit cases are switchable via file paths
-
----
+* This repository is intended for **research and reproducibility**.
+* The code prioritizes clarity and physical consistency over raw performance.
+* Meshes are assumed to be in **mm** unless otherwise specified.
 
 ## Author
 
-Satoshi Hoshika  
+Satoshi Hoshika
 Graduate School of Design, Kyushu University
+(ASA\UTF{2013}ASJ Joint Meeting 2025, PoMA)
